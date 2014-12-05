@@ -1123,6 +1123,57 @@ mob/living/carbon/slime/var/temperature_resistance = T0C+75
 			ghosts.Add(O)
 			O << "\blue You are signed up to be a golem."
 
+/obj/effect/poorune
+	anchored = 1
+	desc = "a strange rune used to create poo golems. It glows when spirits are nearby."
+	name = "poo rune"
+	icon = 'icons/obj/rune.dmi'
+	icon_state = "golem"
+	unacidable = 1
+	layer = TURF_LAYER
+
+	New()
+		..()
+		processing_objects.Add(src)
+
+	process()
+		var/mob/dead/observer/ghost
+		for(var/mob/dead/observer/O in src.loc)
+			if(!O.client) continue
+			if(O.mind && O.mind.current && O.mind.current.stat != DEAD) continue
+			ghost = O
+			break
+		if(ghost)
+			icon_state = "golem2"
+		else
+			icon_state = "golem"
+
+	attack_hand(mob/living/user as mob)
+		var/mob/dead/observer/ghost
+		for(var/mob/dead/observer/O in src.loc)
+			if(!O.client) continue
+			if(O.mind && O.mind.current && O.mind.current.stat != DEAD) continue
+			ghost = O
+			break
+		if(!ghost)
+			user << "The rune fizzles uselessly. There is no spirit nearby."
+			return
+		var/mob/living/carbon/human/G = new /mob/living/carbon/human
+		G.dna.mutantrace = "poo"
+		G.set_species("Poo golem")
+		G.real_name = text("Poo Golem ([rand(1, 1000)])")
+		G.loc = src.loc
+		G.key = ghost.key
+		G << "You are a poo golem. You are exactly like a human, except you are made of poo, so you smell three times as bad. Give thanks to [user] for such an incredible gift."
+		del (src)
+
+
+	proc/announce_to_ghosts()
+		for(var/mob/dead/observer/G in player_list)
+			if(G.client)
+				var/area/A = get_area(src)
+				if(A)
+					G << "Poo golem rune created in [A.name]."
 
 /mob/living/carbon/slime/has_eyes()
 	return 0
