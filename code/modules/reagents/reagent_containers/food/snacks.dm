@@ -3039,3 +3039,38 @@
 	New()
 		..()
 		reagents.add_reagent("nutriment", 4)
+		
+/obj/item/weapon/reagent_containers/food/snacks/poo
+	name = "poo"
+	desc = "HELP MOM POOP"
+	icon_state = ("poo1")
+	New()
+		..()
+		reagents.add_reagent("poo", 3)
+		bitesize = 3
+		icon_state = pick("poo1", "poo2", "poo3")
+		switch(icon_state)
+			if("poo1")
+				pixel_x = rand(-12, 12)
+				pixel_y = rand(-12, 12)
+			if("poo2")
+				pixel_x = rand(-8, 8)
+				pixel_y = rand(-8, 8)
+			if("poo3")
+				pixel_x = rand(-5, 5)
+				pixel_y = rand(-5, 5)
+
+/obj/item/weapon/reagent_containers/food/snacks/poo/afterattack(atom/target, mob/user as mob, proximity)
+	if(!proximity) return
+	if(istype(target,/turf/simulated/floor))
+		var/drawtype = input("Would you like to draw a poo rune?", "Poo drawing") in list("yes","no")
+		switch(drawtype)
+			if("yes")
+				user << "You start drawing a poo rune on the [target.name]."
+			if("no")
+				return
+		if(do_after(user, 60))
+			new /obj/effect/poorune(target)
+			user << "You finish drawing."
+			target.add_fingerprint(user)		// Adds their fingerprints to the floor the crayon is drawn on.
+	return
