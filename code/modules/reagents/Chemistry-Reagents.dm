@@ -2182,7 +2182,75 @@ datum
 					M.confused += 2
 				data++
 				return ..()
+		
+		vitaminf
+			name = "Vitamin F"
+			id = "vitamin_f"
+			description = "A chemical compound that promotes concentrated production of methane gases in the stomach and intestines, as well as weakening the sphincter and anal muscles."
+			reagent_state = SOLID
+			color = "#3B240B"
 
+			on_mob_life(var/mob/living/M as mob)
+
+				if(!holder) return
+				if(!M) M = holder.my_atom
+				if(prob(50)) M.emote(pick("poo","fart","moan"))
+				..()
+				return
+				
+		pee
+			name = "Pee"
+			id = "pee"
+			description = "A liquid mostly composed of water and fluidic bodily waste. It has a pungent odour."
+			reagent_state = LIQUID
+			color = "#DDFF00"
+
+			reaction_turf(var/turf/T, var/volume)
+				src = null
+				// Only add one dirt per turf.  Was causing people to crash.
+				if(!istype(T, /turf/space) && !(locate(/obj/effect/decal/cleanable/pee) in T))
+					new /obj/effect/decal/cleanable/pee(T)
+					
+		poo
+			name ="Poo"
+			id = "poo"
+			description = "A brown, smelly organic material formed in the bowels of humans and other organic creatures."
+			reagent_state = SOLID
+			color = "#3B240B"
+
+			reaction_turf(var/turf/T, var/volume)
+				src = null
+				if(volume >= 3)
+					if(!istype(T, /turf/space))
+						new /obj/item/weapon/reagent_containers/food/snacks/poo(T)
+
+			on_mob_life(var/mob/living/M as mob)
+				if(!M) M = holder.my_atom
+				// Toxins are really weak, but without being treated, last very long.
+				M.adjustToxLoss(0.2)
+				..()
+				return
+				
+		jenkem
+			name = "Jenkem"
+			id = "jenkem"
+			description = "A powerful hallucinogen derived from methane gases produced via the fermentation of urine and feces. Very powerful."
+			reagent_state = GAS
+			color = "#E2CBB5"
+			custom_metabolism = 0.05
+
+			on_mob_life(var/mob/living/M as mob)
+
+				if(!holder) return
+				if(!M) M = holder.my_atom
+				M.hallucination += 10
+				M.druggy = max(M.druggy, 15)
+				if(isturf(M.loc) && !istype(M.loc, /turf/space))
+					if(M.canmove && !M.restrained())
+						if(prob(10)) step(M, pick(cardinal))
+				if(prob(7)) M.emote(pick("twitch","drool","moan","giggle"))
+				holder.remove_reagent(src.id, 0.5 * REAGENTS_METABOLISM)
+				return
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
