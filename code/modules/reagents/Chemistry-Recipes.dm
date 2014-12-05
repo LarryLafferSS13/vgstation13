@@ -707,6 +707,20 @@ datum
 			result = "foaming_agent"
 			required_reagents = list("lithium" = 1, "hydrogen" = 1)
 			result_amount = 1
+			
+		jenkem
+			name = "Jenkem"
+			id = "jenkem"
+			result = "jenkem"
+			required_reagents = list("pee"=3, "poo"=3)
+			result_amount = 12
+			
+		vitaminf
+			name = "Vitamin F"
+			id = "vitamin_f"
+			result = "vitamin_f"
+			required_reagents = list("beff"=1, "horsemeat"=1)
+			result_amount = 12
 
 		// Synthesizing these three chemicals is pretty complex in real life, but fuck it, it's just a game!
 		ammonia
