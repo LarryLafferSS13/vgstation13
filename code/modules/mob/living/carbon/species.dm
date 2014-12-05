@@ -447,6 +447,27 @@ var/global/list/whitelisted_species = list("Human")
 		message = filter.FilterSpeech(message)
 	return message
 
+/datum/species/poo
+	name = "Poo golem"
+	name_plural = "Poo golems"
+	icobase = 'icons/mob/human_races/r_poo.dmi'
+	deform = 'icons/mob/human_races/r_poo.dmi'
+	darksight = 8
+
+	cold_level_1 = 260 //Default 260
+	cold_level_2 = 200 //Default 200
+	cold_level_3 = 120 //Default 120
+	heat_level_1 = 360 //Default 360
+	heat_level_2 = 400 //Default 400
+	heat_level_3 = 1000 //Default 1000
+
+	primitive = /mob/living/carbon/monkey
+
+	flags = HAS_LIPS | HAS_UNDERWEAR | HAS_SKIN_COLOR
+	
+	flesh_color = "#663300"
+	base_color = "#663300"
+
 /datum/species/grey // /vg/
 	name = "Grey"
 	icobase = 'icons/mob/human_races/r_grey.dmi'
