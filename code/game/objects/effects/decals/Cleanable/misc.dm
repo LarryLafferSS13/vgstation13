@@ -160,3 +160,12 @@
 /obj/effect/decal/cleanable/soot/New()
 	..()
 	dir = pick(cardinal)
+
+/obj/effect/decal/cleanable/pee //I'm not fucking sorry, you fucking assholes. You brought this upon yourself.
+	name = "pee"
+	desc = "It smells like asparagus!"
+	density = 0
+	anchored = 1
+	layer = 2
+	icon = 'icons/effects/blood.dmi'
+	icon_state = "pee"

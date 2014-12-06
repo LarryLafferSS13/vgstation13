@@ -263,3 +263,25 @@ var/global/chicken_count = 0
 			del(src)
 	else
 		processing_objects.Remove(src)
+
+/mob/living/simple_animal/poo
+	name = "poo"
+	desc = "I AM THE GREAT MIGHTY POO"
+	icon_state = "standing"
+	icon_living = "standing"
+	icon_dead = "lying"
+	speak = list("Frrrrt!","Frrt!","Frrrrt frrrt frrrrrrt!")
+	speak_emote = list("farts","sharts")
+	emote_hear = list("farts")
+	emote_see = list("slaps the ground, leaving a poo stain","gurgles menacingly")
+	speak_chance = 2
+	turns_per_move = 3
+	meat_type = /obj/item/weapon/reagent_containers/food/snacks/poo
+	meat_amount = 5
+	response_help  = "licks"
+	response_disarm = "puts his hands into the "
+	response_harm   = "takes a bite out of"
+	attacktext = "takes a bite out of"
+	health = 10
+	pass_flags = PASSTABLE
+	small = 1

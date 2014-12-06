@@ -564,6 +564,29 @@
 						message = "<B>[src]</B> makes a very loud noise."
 						m_type = HEARABLE
 
+		if ("poo") //lolno
+			if(prob(1))
+				message = "<B>[src]</B> hunches over and shits out a living pile of feces."
+				playsound(src.loc, 'sound/misc/wetfart.ogg', 50, 1)
+				playsound(src.loc, 'sound/misc/fartmassive.ogg', 50, 1)
+				playsound(src.loc, 'sound/effects/splat.ogg', 50, 1)
+				new /mob/living/simple_animal/poo(src.loc)
+			else
+				var/list/poos = list("drops their pants and shits.","sprays diarrhea down their leg.","takes a dump on the floor.","casually lifts his pant leg, and a turd falls out.","tries to fart, and accidentally sharts..")
+				var/poo = pick(poos)
+				message = "<b>[src]</b> [poo]"
+				playsound(src.loc, 'sound/misc/wetfart.ogg', 50, 1)
+				playsound(src.loc, 'sound/misc/fartmassive.ogg', 50, 1)
+				playsound(src.loc, 'sound/effects/splat.ogg', 50, 1)
+				new /obj/item/weapon/reagent_containers/food/snacks/poo(src.loc)
+
+		if ("pee") //This was needed.
+			var/list/pees = list("dribbles pee down their leg.","whips out their genitals and starts pissing on the floor.","suddenly develops a wet patch on their groin.")
+			var/pee = pick(pees)
+			message = "<b>[src]</b> [pee]"
+			playsound(src.loc, 'sound/misc/pee.ogg', 50, 1)
+			new /obj/effect/decal/cleanable/pee(src.loc)
+
 		// Needed for M_TOXIC_FART
 		if("fart")
 			if(src.op_stage.butt != 4)
