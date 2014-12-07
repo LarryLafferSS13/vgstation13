@@ -125,30 +125,58 @@ var/global/ingredientLimit = 10
 
 // Food Processing /////////////////////////////////////////////
 
-//Returns "valid" or the reason for denial.
-/obj/machinery/cooking/proc/validateIngredient(var/obj/item/I)
-	if(istype(I,/obj/item/weapon/grab) || istype(I,/obj/item/tk_grab)) . = "It won't fit."
-	else if(istype(I,/obj/item/weapon/disk/nuclear)) . = "It's the fucking nuke disk!"
-	else if(istype(I,/obj/item/weapon/reagent_containers/food/snacks) || deepFriedEverything) . = "valid"
-	else if(istype(I,/obj/item/organ))
-		var/obj/item/organ/organ = I
-		if(organ.robotic) . = "That's a prosthetic. It wouldn't taste very good."
-		else . = "valid"
-	else . = "It's not edible food."
+/obj/machinery/cooking/proc/takeIngredient(var/obj/item/I,mob/user)
+	var/obj/item/weapon/grab/G = I
+	if(istype(G))	// handle grabbed mob
+		if(ismob(G.affecting))
+			var/mob/GM = G.affecting
+			user.attack_log += "<span class='warning'> [user]([user.ckey]) has attempted to put [GM]([GM.ckey]) in a cooking machine.</span>"
+			GM.attack_log += "<span class='warning'> [user]([user.ckey]) has attempted to put [GM]([GM.ckey]) in a cooking machine.</span>"
+			for (var/mob/V in viewers(usr))
+				V.show_message("[usr] starts putting [GM.name] into the [src].", 3)
+			if(do_after(usr, 20))
+				if (GM.client)
+					GM.client.perspective = EYE_PERSPECTIVE
+					GM.client.eye = src
+				GM.loc = src
+				for (var/mob/C in viewers(src))
+					C.show_message("\red [GM.name] has been placed in the [src] by [user].", 3)
+				del(G)
+				G.affecting.death(1)
+				G.affecting.ghostize()
+				log_attack("<font color='red'>[usr] ([usr.ckey]) placed [GM] ([GM.ckey]) in a cooking machine.</font>")
+				src.ingredient = GM
+				if(src.foodChoices) . = src.foodChoices[(input("Select production.") in src.foodChoices)]
+				spawn() src.cook(.)
+				return
+	else if(src.foodChoices) . = src.foodChoices[(input("Select production.") in src.foodChoices)]
+	user.drop_item()
+	I.loc = src
+	src.ingredient = I
+	spawn() src.cook(.)
+	user << "<span class='notice'>You add the [I.name] to the [src.name].</span>"
 	return
 
-/obj/machinery/cooking/proc/takeIngredient(var/obj/item/I,mob/user)
-	. = src.validateIngredient(I)
-	if(. == "valid")
+/obj/machinery/cooking/MouseDrop_T(mob/target, mob/user)
+	if(target != user || user.stat || user.weakened || user.stunned || user.paralysis || user.buckled || get_dist(user, src) > 1)
+		return
+
+	src.add_fingerprint(user)
+	user.visible_message("\red [user.name] starts climbing into the [src].", "\red You start climbing into the [src].")
+
+	if(do_after(user, 30) && user)
+		user.visible_message("\red [user] climbs into the [src]", "\red You climb into the [src].")
+		if(user.client)
+			user.client.perspective = EYE_PERSPECTIVE
+			user.client.eye = src
+		user.loc = src
+		src.ingredient = user
 		if(src.foodChoices) . = src.foodChoices[(input("Select production.") in src.foodChoices)]
-		user.drop_item()
-		I.loc = src
-		src.ingredient = I
 		spawn() src.cook(.)
-		user << "<span class='notice'>You add the [I.name] to the [src.name].</span>"
-		return 1
-	else user << "<span class='warning'>You can't put that in the [src.name]. \n[.]</span>"
-	return 0
+		user.death(1)
+		user.ghostize()
+		update_icon()
+		return
 
 /obj/machinery/cooking/proc/cook(var/foodType)
 	src.active = 1
