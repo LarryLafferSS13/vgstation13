@@ -57,6 +57,10 @@
 					icon_state  = "lemonglass"
 					name = "glass of lemonjuice"
 					desc = "Sour..."
+				if("pee")
+					icon_state = "lemonade"
+					name = "lemonade?"
+					desc = "This may not be lemonade."
 				if("cola")
 					icon_state  = "glass_brown"
 					name = "glass of Space Cola"
@@ -483,3 +487,11 @@
 		..()
 		reagents.add_reagent("cola", 50)
 		on_reagent_change()
+		
+/obj/item/weapon/reagent_containers/food/drinks/drinkingglass/attack_self(mob/user)
+	if (reagents.reagent_list.len == 0)
+		reagents.add_reagent("pee", 25)
+		user << "You pee into the drinking glass."
+		user.visible_message("[usr] pees into a drinking glass. That sick fuck!")
+	else
+		return
