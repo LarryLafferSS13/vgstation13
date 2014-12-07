@@ -205,6 +205,11 @@
 /obj/item/weapon/reagent_containers/food/snacks/customizable/candy/gummybear
 	name = "flavored giant gummy bear"
 	icon_state = "gummybearcustom"
+	
+/obj/item/weapon/reagent_containers/food/snacks/customizable/candy/poo
+	name = "flavored poo"
+	desc = "Science has gone too far this time."
+	icon_state = "poocustom"
 
 /obj/item/weapon/reagent_containers/food/snacks/customizable/candy/gummyworm
 	name = "flavored giant gummy worm"
