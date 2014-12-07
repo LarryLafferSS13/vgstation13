@@ -204,15 +204,6 @@ var/global/ingredientLimit = 10
 	icon_state_on = "mixer_on"
 	cookSound = 'sound/machines/juicer.ogg'
 
-/obj/machinery/cooking/candy/validateIngredient(var/obj/item/I)
-	. = ..()
-	if((. == "valid") && (!foodNesting))
-		for(. in src.foodChoices)
-			if(findtext(I.name,.))
-				. = "It's already candy."
-				break
-	return
-
 /obj/machinery/cooking/candy/makeFood(var/foodType)
 	var/obj/item/I = new foodType(src.loc,src.ingredient)
 	I.name = "[src.ingredient.name] [I.name]"
@@ -232,11 +223,6 @@ var/global/ingredientLimit = 10
 	icon_state_on = "still_on"
 	cookSound = 'sound/machines/juicer.ogg'
 
-/obj/machinery/cooking/still/validateIngredient(var/obj/item/I)
-	if(istype(I,/obj/item/weapon/reagent_containers/food/snacks/grown)) . = "valid"
-	else . = "It ain't grown food!"
-	return
-
 /obj/machinery/cooking/still/getFoodChoices()
 	return (typesof(/obj/item/weapon/reagent_containers/food/drinks/bottle/customizable)-(/obj/item/weapon/reagent_containers/food/drinks/bottle/customizable))
 
@@ -249,12 +235,6 @@ var/global/ingredientLimit = 10
 	icon_state_on = "cereal_on"
 	foodChoices = null
 	cookTime = 200
-
-/obj/machinery/cooking/cerealmaker/validateIngredient(var/obj/item/I)
-	. = ..()
-	if((. == "valid") && (!foodNesting))
-		if(findtext(I.name,"cereal")) . = "It's already cereal."
-	return
 
 /obj/machinery/cooking/cerealmaker/makeFood()
 	var/obj/item/weapon/reagent_containers/food/snacks/cereal/C = new(src.loc)
@@ -277,13 +257,6 @@ var/global/ingredientLimit = 10
 	icon_state_on = "fryer_on"
 	foodChoices = null
 	cookTime = 200
-
-/obj/machinery/cooking/deepfryer/validateIngredient(var/obj/item/I)
-	. = ..()
-	if((. == "valid") && (!foodNesting))
-		if(findtext(I.name,"fried")) . = "It's already deep-fried."
-		else if(findtext(I.name,"grilled")) . = "It's already grilled."
-	return
 
 /obj/machinery/cooking/deepfryer/makeFood(var/item/I)
 	var/obj/item/weapon/reagent_containers/food/snacks/deepfryholder/D = new(src.loc)
